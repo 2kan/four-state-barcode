@@ -10,6 +10,14 @@ const ENCODING = {
 	C: "C",
 	N: "N"
 };
+const FORMATS = {
+	NULL: "00",
+	STANDARD: "11",
+	CUSTOMER2: "59",
+	CUSTOMER3: "62"
+};
+const FORMATLENGTH
+
 const encodeMap = require( "./encoding.json" );
 
 const barSpec = {
@@ -21,6 +29,27 @@ const barSpec = {
 
 
 Write( Encode( ENCODING.C, "purple i" ) );
+
+function CreateAusPostBarcode( a_formatType, a_format, a_DPID, a_customerInfo )
+{
+	var encoded = "10"; // Add start bars
+	encoded += Encode( ENCODING.N, a_format, 4 ); // Add FCC
+	encoded += Encode( ENCODING.N, a_DPID, 16 ); // Add sorting code
+
+	if ( a_format != FORMATS.CUSTOMER2 && a_format != FORMATS.CUSTOMER3 )
+	{
+		encoded += GenerateReedSolomon();
+	}
+
+	encoded += "10"; // Add end bars
+
+	return encoded;
+}
+
+function GenerateReedSolomon()
+{
+
+}
 
 //
 // Encodes and returns a given string to a specified encoding.
