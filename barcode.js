@@ -19,14 +19,12 @@ const barSpec = {
 	"3": { top: 0.5, bottom: 0.5 }
 }
 
-var image = PNGImage.createImage( 500, 100 );
 
+Write( Encode( ENCODING.C, "purple i" ) );
 
-//Write( "012231032132013213210321021303" );
-//console.log( CEncode( "ABC" ) );
-
-Write( Encode( ENCODING.N, "0123" ) );
-
+//
+// Encodes and returns a given string to a specified encoding.
+// Optionally pads the string to a specified length.
 function Encode( a_encoding, a_input, a_padToLength )
 {
 	var encoded = "";
@@ -35,31 +33,45 @@ function Encode( a_encoding, a_input, a_padToLength )
 
 	for ( var i = 0; i < a_padToLength; ++i )
 	{
-		console.log( "encoding " + a_input[ i ] );
 		if ( a_input[ i ] )
-		{
 			encoded += encodeMap[ a_encoding ][ a_input[ i ] ];
-		}
 		else
-		{
 			encoded += padChar;
-		}
-
-		console.log( encoded );
 	}
 
 	return encoded;
 }
 
-function Write( a_encoded )
+// 
+// Takes a given string and saves it's barcode as an image file.
+// Optionally saves to a specified path.
+// Optionally saves as a specified color
+// If specified, a_outputPath can either be an object of {red, green, blue, alpha}
+// 	or the word "RAINBOW" (when I get around to adding that)
+function Write( a_encoded, a_outputPath, a_color )
 {
+	const scale = 10;
+	const width = 0.3;
+	const pad = 7;
+
+	var image = PNGImage.createImage(
+		a_encoded.length * pad + a_encoded.length * width * scale + pad * 2,
+		( barSpec[ 0 ].top + barSpec[ 0 ].bottom ) * scale + pad * 2
+	);
+
+	/*console.log(
+		a_encoded,
+		a_encoded.length,
+		image.getWidth(),
+		image.getHeight()
+	);*/
+
 	var x = 10;
 	var y = Math.floor( image.getHeight() / 2 );
 
-	const scale = 10;
-	const width = 3;
-
-	const color = { red: 0, green: 0, blue: 0, alpha: 255 };
+	var color = { red: 0, green: 0, blue: 0, alpha: 255 };
+	if ( a_color )
+		color = a_color;
 
 	for ( var i = 0; i < a_encoded.length; ++i )
 	{
@@ -67,24 +79,26 @@ function Write( a_encoded )
 			image,
 			x,
 			y - ( barSpec[ a_encoded[ i ] ].top * scale ),
-			x + width,
+			x + ( width * scale ),
 			y + ( barSpec[ a_encoded[ i ] ].bottom * scale ),
 			color
 		);
 
-		x += 10;
+		x += pad + width * scale;
 	}
 
-	image.writeImage( path.join( __dirname, "blep.png" ) );
+	if ( a_outputPath == undefined )
+		a_outputPath = path.join( __dirname, "barcode.png" );
+
+	image.writeImage( a_outputPath );
 }
 
+//
+// Draws a rectangle with the specified (x1,y1) and (x2,y2) points on
+// a given PNGImage with a specified color
 function DrawRect( a_image, a_startX, a_startY, a_endX, a_endY, a_color )
 {
 	for ( var x = a_startX; x < a_endX; ++x )
-	{
 		for ( var y = a_startY; y < a_endY; ++y )
-		{
 			a_image.setAt( x, y, a_color );
-		}
-	}
 }
