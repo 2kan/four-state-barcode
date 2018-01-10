@@ -1,0 +1,45 @@
+
+
+	##		##
+	##		##
+	##		##
+	##		##		##		##
+	##		##		##		##
+	##				##
+	##				##
+	##				##
+
+	H (val 0)		D (val 2)
+			A (val 1)		T (val 3)
+
+
+Aspect:
+
+	T	1
+	AD	2.6
+	H	4.2
+
+
+
+┌──────────┬────────────────────────────────────┬─────────────────────────────────────┬────────────────────────────────────────────────────┐
+│  Length  │                Name                │             Description             │                       Notes                        │
+├──────────┼────────────────────────────────────┼─────────────────────────────────────┼────────────────────────────────────────────────────┤
+│ 2        │ Start bars                         │ Starts and terminates with AT       │                                                    │
+│ 4        │ Format Control Code                │ See below table                     │ Encoded with N encoding                            │
+│ 16       │ Sorting Code Field                 │ Encoded 8 digit DPID                │ Encoded with N encoding                            │
+│ 16 or 31 │ Customer Information Field         │ Encoded with either C or N encoding │ Only available in Customer Barcode 2 and 3 formats │
+│ 12       │ Reed Solomon Error Correction Bars │ See RSECB spec below                │                                                    │
+│ 2        │ End bars                           │ Starts and terminates with AT       │                                                    │
+└──────────┴────────────────────────────────────┴─────────────────────────────────────┴────────────────────────────────────────────────────┘
+
+
+Padding char is T  
+
+┌───────────┬───────────────────────────┬───────────────────┐
+│ FCC value │        Description        │  Barcode length   │
+├───────────┼───────────────────────────┼───────────────────┤
+│        00 │ Null Customer Barcode     │ 37, 52 or 67 bars │
+│        11 │ Standard Customer Barcode │ 37 bars           │
+│        59 │ Customer Barcode 2        │ 52 bars           │
+│        62 │ Customer Barcode 3        │ 67 bars           │
+└───────────┴───────────────────────────┴───────────────────┘

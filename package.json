@@ -1,0 +1,14 @@
+{
+  "name": "4state",
+  "version": "1.0.0",
+  "description": "",
+  "main": "barcode.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tom Penney",
+  "license": "MIT",
+  "dependencies": {
+    "pngjs-image": "^0.11.7"
+  }
+}
