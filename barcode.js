@@ -16,9 +16,11 @@ const FORMATS = {
 	CUSTOMER2: "59",
 	CUSTOMER3: "62"
 };
-const FORMATLENGTH
+//const FORMATLENGTH
+
 
 const encodeMap = require( "./encoding.json" );
+const colors = require( "./colors.json" );
 
 const barSpec = {
 	"0": { top: 2.1, bottom: 2.1 },
@@ -27,8 +29,11 @@ const barSpec = {
 	"3": { top: 0.5, bottom: 0.5 }
 }
 
+const encoded = Encode( ENCODING.C, "I hope this isnt copyrighted by Australia Post" );
+console.log( encoded );
 
-Write( Encode( ENCODING.C, "purple i" ) );
+Write( encoded, undefined, colors.PINK );
+console.log( Encode( ENCODING.C, "purple is a fruit" ) );
 
 function CreateAusPostBarcode( a_formatType, a_format, a_DPID, a_customerInfo )
 {
@@ -63,7 +68,14 @@ function Encode( a_encoding, a_input, a_padToLength )
 	for ( var i = 0; i < a_padToLength; ++i )
 	{
 		if ( a_input[ i ] )
-			encoded += encodeMap[ a_encoding ][ a_input[ i ] ];
+		{
+			// Add encoded data from map
+			// If there's no mapping for the input character, use a 0 instead
+			if ( encodeMap[ a_encoding ][ a_input[ i ] ] == undefined )
+				encoded += encodeMap[ a_encoding ][ "0" ];
+			else
+				encoded += encodeMap[ a_encoding ][ a_input[ i ] ];
+		}
 		else
 			encoded += padChar;
 	}
@@ -98,8 +110,9 @@ function Write( a_encoded, a_outputPath, a_color )
 	var x = 10;
 	var y = Math.floor( image.getHeight() / 2 );
 
+	// Set default color
 	var color = { red: 0, green: 0, blue: 0, alpha: 255 };
-	if ( a_color )
+	if ( a_color ) // Set custom color if specified
 		color = a_color;
 
 	for ( var i = 0; i < a_encoded.length; ++i )
