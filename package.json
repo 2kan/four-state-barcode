@@ -9,6 +9,7 @@
   "author": "Tom Penney",
   "license": "MIT",
   "dependencies": {
+    "opencv4nodejs": "^2.33.0",
     "pngjs-image": "^0.11.7"
   }
 }
